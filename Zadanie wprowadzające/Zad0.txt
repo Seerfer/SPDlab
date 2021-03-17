@@ -1,0 +1,17 @@
+Przykładem realizacji problemu przepływowego może być produkcja samochodów. Jest to proces składający się z wielu etapów. Kolejne etapy 
+produkcji samochodu mogą stanowić:
+1.Formowanie elementów konstrukcyjnych.
+2.Spawanie elementów.
+ Połączenia:
+	- podłogi,
+	- dachu,
+	- błotników itd.
+3. Lakierowanie elementów.
+4. Montaż na lini produkcyjnej.
+ Konieczność zamontowania:
+	- drzwi,
+	- szyb,
+	- tapicerki,
+	- elektroniki itd.
+Każdy kolejny etap produkcji samochodu wymaga innej maszyny czy lini produkcyjnej. Poszczególne etapy nie mogą zostać zamienione kolejnością 
+jednak poszczególne elementy w danym etapie możemy montować dowolnie. Może to znacznie przyspieszyć oraz ułatwic cały proces. 
