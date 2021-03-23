@@ -6,7 +6,7 @@ def two_machines_johnson(times:  list):
     machine2 = [int(i) for i in times[1]]
     list1, list2 = [], []
 
-    while not tasks == []:
+    while True:
         merged = [*machine1, *machine2]
 
         min_element = min(merged)
@@ -21,19 +21,18 @@ def two_machines_johnson(times:  list):
         machine2[index] = inf
         tasks.remove(index+1)
 
+        if tasks == []:
+            break
+
     list2 = list(reversed(list2))
-    schedule = []
-    schedule.extend(list1)
-    schedule.extend(list2)
+    schedule = list1 + list2
     print(schedule)
     return schedule
 
 
-
-
 def multi_machines_Johnson(times):
 
-    if len(times) % 2  == 0:
+    if len(times) % 2 == 0:
         half = len(times) // 2
         list1 = times[:half]
         list2 = times[half:]
@@ -52,7 +51,5 @@ def multi_machines_Johnson(times):
         list1 = [a + b for a, b in zip(list1, half_element)]
         list2 = [a + b for a, b in zip(list2, half_element)]
 
-    splited_lists = []
-    splited_lists.append(list1)
-    splited_lists.append(list2)
-    two_machines_johnson(splited_lists)
+    splited_lists = [list1, list2]
+    return two_machines_johnson(splited_lists)
