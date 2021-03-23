@@ -22,6 +22,7 @@ def readData(name="data.txt"):
                 data.readline()
                 cmax = int(data.readline())
                 result = [int(x) for x in next(data).split()]
+                matrix = list((map(list, zip(*matrix))))
                 data_sets.append([matrix, cmax, result])
 
             if line == "END":
