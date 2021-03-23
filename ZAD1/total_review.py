@@ -4,7 +4,7 @@ import C_max
 
 
 def total_review(times):
-    tasks = len(times)
+    tasks = len(times[0])
     schedules = list(permutations(range(1,(tasks+1))))
     Cmax = math.inf
     best_schedule = 0
