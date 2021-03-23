@@ -18,5 +18,5 @@ def calculate_Cmax(schedule, times):
                 else:
                     Cmax[i][j] = max(Cmax[i - 1][j], Cmax[i][j - 1]) + times[schedule[i] - 1][j]
 
-            return Cmax[tasks - 1][machines - 1]
+    return Cmax[tasks - 1][machines - 1]
 
