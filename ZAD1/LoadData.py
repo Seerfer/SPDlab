@@ -2,11 +2,11 @@ import os
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
-def readData(name="data.txt"):
+def readData(name):
 
     data_sets = []
     is_reading = True
-    with open(os.path.join(THIS_FOLDER, "data.txt"), "r") as data:
+    with open(os.path.join(THIS_FOLDER, name), "r") as data:
         while is_reading:
             line = data.readline()
             if "data" in line:
