@@ -1,4 +1,4 @@
-def calculate_cmax(sched, times):
+def count_cmax(sched, times):
     times = list((map(list, zip(*times))))
     tmp = [[None for _ in range(len(times[0]))] for _ in range(len(times))]
     for i in range(0, len(times)):
