@@ -19,7 +19,7 @@ def neh_cmax(tasks, schedule):
     return Cmax.count_cmax(tmp_schedule, list((map(list, zip(*tmp_tasks)))))
 
 def neh(times):
-    tasks = list((map(list, zip(*times))))
+    tasks = times
     priorities_dict = {}
     index = 1
 
