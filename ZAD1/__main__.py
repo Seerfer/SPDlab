@@ -1,8 +1,9 @@
 import LoadData
 import Johnson
 import Cmax
-
+import Gantt
+import AllPosiblities
 data = LoadData.readData("data.txt")
-print(Cmax.count_cmax(Johnson.multi_machines_Johnson(data[-1][0]), data[-1][0]))
 
 
+Gantt.gantt(data[1][2], data[1][0])

@@ -29,4 +29,3 @@ def readData(name):
                 is_reading = False
 
     return data_sets
-
