@@ -10,4 +10,4 @@ def readData(name):
         for _ in range(0, tasks):
             matrix.append([int(x) for x in next(data).split()])
 
-        return tasks, machines, matrix
+        return matrix
