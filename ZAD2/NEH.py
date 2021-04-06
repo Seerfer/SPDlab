@@ -11,19 +11,18 @@ def all_posibilities(lista, el):
         posibilities.append(tmp)
     return posibilities
 
-def neh_cmax(tasks, schedule):
+def neh_cmax(times, schedule):
     tmp_schedule = list(range(1, len(schedule)+1))
     tmp_tasks =  []
     for i in schedule:
-        tmp_tasks.append(tasks[i-1])
+        tmp_tasks.append(times[i - 1])
     return Cmax.count_cmax(tmp_schedule, list((map(list, zip(*tmp_tasks)))))
 
 def neh(times):
-    tasks = times
     priorities_dict = {}
     index = 1
 
-    for i in tasks:
+    for i in times:
         priorities_dict[index] = sum(i)
         index += 1
     priorities_dict = dict(sorted(priorities_dict.items(), key=lambda item: item[1], reverse=True))
@@ -39,7 +38,7 @@ def neh(times):
             posibilities = all_posibilities(result, choose)
             minimum = math.inf
             for i in posibilities:
-                c_max = neh_cmax(tasks, i)
+                c_max = neh_cmax(times, i)
                 if c_max < minimum:
                     minimum = c_max
                     result = i
