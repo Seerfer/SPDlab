@@ -5,6 +5,5 @@ import tests
 import Johnson
 import Cmax
 
-times = Load.readData("Data/data001vs.txt")
-
-tests.random_test()
+times = Load.readData("Data/tmp.txt")
+print(NEH.neh(times))
