@@ -109,7 +109,7 @@ def neh_ext2(times):
         task_with_biggest_sum = Critical_path.task_with_biggest_sum_ex2(tmp_result, tmp_task)
         task_with_biggest_sum_el = result[task_with_biggest_sum-1]
         result.remove(task_with_biggest_sum_el)
-        posibilities = all_posibilities(result, task_with_biggest_sum)
+        posibilities = all_posibilities(result, task_with_biggest_sum_el)
         minimum = math.inf
         for i in posibilities:
             c_max = neh_cmax(times, i)
@@ -152,7 +152,7 @@ def neh_ext3(times):
         most_operations_task = Critical_path.most_operations_task_ex3(tmp_result, tmp_task)
         most_operations_task_el = result[most_operations_task-1]
         result.remove(most_operations_task_el)
-        posibilities = all_posibilities(result, most_operations_task)
+        posibilities = all_posibilities(result, most_operations_task_el)
         minimum = math.inf
         for i in posibilities:
             c_max = neh_cmax(times, i)
