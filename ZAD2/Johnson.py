@@ -31,6 +31,7 @@ def two_machines_johnson(times: list):
 
 
 def multi_machines_Johnson(times):
+    times = list((map(list, zip(*times))))
     if len(times) % 2 == 0:
         half = len(times) // 2
         list1 = times[:half]

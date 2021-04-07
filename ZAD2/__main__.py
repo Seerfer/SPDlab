@@ -1,14 +1,13 @@
 import NEH
 import Load
 import NEHmodifications
+import tests
+import Johnson
+import Cmax
 
-
-sched = [2, 3, 1]
-datas = Load.read_datest("Data/data.txt")
-
-times = datas[8]
-print(NEH.neh(times),"zwykly")
-print(NEHmodifications.neh_ext1(times), "1 mod")
-print(NEHmodifications.neh_ext2(times), "2 mod")
-print(NEHmodifications.neh_ext3(times), "3 mod")
-print(NEHmodifications.neh_ext4(times), "4 mod")
+times = Load.readData("Data/data001v.txt")
+print(NEH.neh(times))
+print(NEHmodifications.neh_ext4(times))
+print(NEHmodifications.neh_ext3(times))
+print(NEHmodifications.neh_ext2(times))
+print(NEHmodifications.neh_ext1(times))

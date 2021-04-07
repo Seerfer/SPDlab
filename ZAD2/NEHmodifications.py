@@ -1,6 +1,21 @@
 import math
 import Cmax
 import Critical_path
+
+def bigest_Cmax(result, times):
+    cmaxs = {}
+    if len(result) == 1:
+        return result[0]
+    else:
+        for i in result:
+            tmp_result = result[:]
+            tmp_result.remove(i)
+            tmp_tasks = times[:]
+            tmp_tasks.remove(tmp_tasks[i - 1])
+            cmaxs[i] = neh_cmax(times, tmp_result)
+        return list(dict(sorted(cmaxs.items(), key=lambda item: item[1], reverse=True)).items())[-1][0]
+
+
 def all_posibilities(lista, el):
     posibilities = []
     i = 0
@@ -44,15 +59,20 @@ def neh_ext1(times):
                 if c_max < minimum:
                     minimum = c_max
                     result = i
-    longest_task = Critical_path.longest_task_ex1(result, times)
-    result.remove(longest_task)
-    posibilities = all_posibilities(result, longest_task)
-    minimum = math.inf
-    for i in posibilities:
-        c_max = neh_cmax(times, i)
-        if c_max < minimum:
-            minimum = c_max
-            result = i
+
+        tmp_result = list(range(1, len(result) + 1))
+        tmp_task = []
+        for i in result:
+            tmp_task.append(times[i - 1])
+        longest_task = Critical_path.longest_task_ex1(tmp_result, tmp_task)
+        result.remove(result[longest_task-1])
+        posibilities = all_posibilities(result, longest_task)
+        minimum = math.inf
+        for i in posibilities:
+            c_max = neh_cmax(times, i)
+            if c_max < minimum:
+                minimum = c_max
+                result = i
 
     return result, minimum
 
@@ -80,15 +100,20 @@ def neh_ext2(times):
                 if c_max < minimum:
                     minimum = c_max
                     result = i
-    task_with_biggest_sum = Critical_path.task_with_biggest_sum_ex2(result, times)
-    result.remove(task_with_biggest_sum)
-    posibilities = all_posibilities(result, task_with_biggest_sum)
-    minimum = math.inf
-    for i in posibilities:
-        c_max = neh_cmax(times, i)
-        if c_max < minimum:
-            minimum = c_max
-            result = i
+
+        tmp_result = list(range(1, len(result) + 1))
+        tmp_task = []
+        for i in result:
+            tmp_task.append(times[i - 1])
+        task_with_biggest_sum = Critical_path.task_with_biggest_sum_ex2(tmp_result, tmp_task)
+        result.remove(result[task_with_biggest_sum-1])
+        posibilities = all_posibilities(result, task_with_biggest_sum)
+        minimum = math.inf
+        for i in posibilities:
+            c_max = neh_cmax(times, i)
+            if c_max < minimum:
+                minimum = c_max
+                result = i
 
     return result, minimum
 
@@ -117,15 +142,20 @@ def neh_ext3(times):
                 if c_max < minimum:
                     minimum = c_max
                     result = i
-    most_operations_task = Critical_path.most_operations_task_ex3(result, times)
-    result.remove(most_operations_task)
-    posibilities = all_posibilities(result, most_operations_task)
-    minimum = math.inf
-    for i in posibilities:
-        c_max = neh_cmax(times, i)
-        if c_max < minimum:
-            minimum = c_max
-            result = i
+
+        tmp_result = list(range(1, len(result)+1))
+        tmp_task = []
+        for i in result:
+            tmp_task.append(times[i-1])
+        most_operations_task = Critical_path.most_operations_task_ex3(tmp_result, tmp_task)
+        result.remove(result[most_operations_task-1])
+        posibilities = all_posibilities(result, most_operations_task)
+        minimum = math.inf
+        for i in posibilities:
+            c_max = neh_cmax(times, i)
+            if c_max < minimum:
+                minimum = c_max
+                result = i
 
     return result, minimum
 
@@ -156,22 +186,15 @@ def neh_ext4(times):
                     result = i
 
     # ROZSZERZENIE #
-    cmaxs = {}
-    for i in result:
-        tmp_result = result[:]
-        tmp_result.remove(i)
-        tmp_tasks = times[:]
-        tmp_tasks.remove(tmp_tasks[i-1])
-        cmaxs[i] = neh_cmax(times, tmp_result)
-    longest_task = list(dict(sorted(cmaxs.items(), key=lambda item: item[1], reverse=True)).items())[-1][0] #  Numer zadania
-    result.remove(longest_task)
-    posibilities = all_posibilities(result, longest_task)
-    minimum = math.inf
-    for i in posibilities:
-        c_max = neh_cmax(times, i)
-        if c_max < minimum:
-            minimum = c_max
-            result = i
+        longest_task = bigest_Cmax(result, times)
+        result.remove(longest_task)
+        posibilities = all_posibilities(result, longest_task)
+        minimum = math.inf
+        for i in posibilities:
+            c_max = neh_cmax(times, i)
+            if c_max < minimum:
+                minimum = c_max
+                result = i
 
     return result, minimum
 
