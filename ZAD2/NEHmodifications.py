@@ -17,7 +17,6 @@ def bigest_Cmax(result, times):
 
 
 def all_posibilities(lista, el):
-    print(lista)
     posibilities = []
     i = 0
     for _ in range(len(lista)+1):
@@ -108,7 +107,8 @@ def neh_ext2(times):
         for i in result:
             tmp_task.append(times[i - 1])
         task_with_biggest_sum = Critical_path.task_with_biggest_sum_ex2(tmp_result, tmp_task)
-        result.remove(result[task_with_biggest_sum-1])
+        task_with_biggest_sum_el = result[task_with_biggest_sum-1]
+        result.remove(task_with_biggest_sum_el)
         posibilities = all_posibilities(result, task_with_biggest_sum)
         minimum = math.inf
         for i in posibilities:
@@ -150,7 +150,8 @@ def neh_ext3(times):
         for i in result:
             tmp_task.append(times[i-1])
         most_operations_task = Critical_path.most_operations_task_ex3(tmp_result, tmp_task)
-        result.remove(result[most_operations_task-1])
+        most_operations_task_el = result[most_operations_task-1]
+        result.remove(most_operations_task_el)
         posibilities = all_posibilities(result, most_operations_task)
         minimum = math.inf
         for i in posibilities:
