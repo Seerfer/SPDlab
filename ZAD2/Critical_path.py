@@ -1,6 +1,5 @@
 #funkcja znajduje ścieżke krytyczną, napisana na podstawie funkcji obliczającej Cmax
 def critical_path(sched, times):
-    times = list((map(list, zip(*times))))
     crit_path = []
     crit_time = 0      # zmienna pomocnicza obliczajaca czas trwania sciezki krytycznej
     tmp = [[None for _ in range(len(times[0]))] for _ in range(len(times))]
@@ -37,7 +36,6 @@ def critical_path(sched, times):
 # potrzebne do pierwszego rozszerzenia
 def longest_task_ex1(sched, times):
     crit_path = critical_path(sched, times) # oblicza sciezke krytyczna
-    times = list((map(list, zip(*times))))
     max_time = 0
     task_with_max = 0
     for item in crit_path:  #petla po elementach sciezki
@@ -53,7 +51,6 @@ def longest_task_ex1(sched, times):
 # potrzebne do drugiego rozszerzenia
 def task_with_biggest_sum_ex2(sched, times):
     crit_path = critical_path(sched, times) # obliczanie sciezki
-    times = list((map(list, zip(*times))))
     biggest_sum_task = None
     sum = {}    #pusty słownik (zadanie:czas trwania)
     for item in crit_path:
