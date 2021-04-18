@@ -1,6 +1,5 @@
-import math
 from neh import NEHmodifications, Cmax
-from Johnson import Johnson
+from ZAD3 import Johnson
 import random
 from time import perf_counter
 import matplotlib.pyplot as plt
@@ -94,11 +93,10 @@ Funkcje do realizacji algorytmu tabu search
 
 
 def initialize_shedule(times, method="random"):
-    if method == "algorithm":
-        if len(times) < 101:
-            return NEHmodifications.neh_ext4(times)[0]
-        else:
-            return Johnson.multi_machines_Johnson(times)
+    if method == "neh":
+        return NEHmodifications.neh_ext4(times)[0]
+    if method == "johnson":
+        return Johnson.multi_machines_Johnson(times)
     if method == "random":
         tmp = list(range(1, len(times)+1))
         random.shuffle(tmp)
@@ -107,31 +105,24 @@ def initialize_shedule(times, method="random"):
         return list(range(1, len(times)+1))
 
 
-def make_search(times, tabu, max_tabu, current, best_cmax, best, change, history):
-    if change:
-        neighbourhoods = neighbourhoods_generator(current,function="swap")
-    else:
-        neighbourhoods = global_neighbourhoods(current)
-        neighbourhoods.extend(neighbourhoods_generator(current,function="insert"))
-    current_cmax, current = best_neighbourhood(neighbourhoods, times, tabu, current)
+def make_search(times, tabu, max_tabu, current, best_cmax, best, history):
+    neighbourhoods = neighbourhoods_generator(current,function="swap")
+    tmp_tabu = tabu[-max_tabu:]
+    current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:], current)
     history.append(current_cmax)
     print(f"best: {best_cmax}            current: {current_cmax}")
     tabu.append(current)
-    if len(tabu) > max_tabu:
-        tabu.pop(0)
     if current_cmax < best_cmax:
         best = current
         best_cmax = current_cmax
-        change = True
-    else:
-        change = False
 
-    return best, best_cmax, tabu, current, change
+    return best, best_cmax, tabu, current,
 
 
-def Tabu_search(times, stop="stuck", max_tabu=25, iter=200, stop_time=100,  stuck_point=10):
+def Tabu_search(times, stop="stuck", max_tabu=20, iter=200, stop_time=100,  stuck_point=20, critical=10):
     history = []
-    schedule = initialize_shedule(times)
+    init_tabu = max_tabu
+    schedule = initialize_shedule(times, method="johnson")
     best = schedule
     best_cmax = Cmax.count_cmax(schedule, list((map(list, zip(*times)))))
     tabu = [schedule]
@@ -139,9 +130,14 @@ def Tabu_search(times, stop="stuck", max_tabu=25, iter=200, stop_time=100,  stuc
 
     if stop == "iter":
         for i in range(0, iter):
-            tmp = make_search(times, tabu, max_tabu, current, best_cmax, best)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best)
             best = tmp[0]
-            best_cmax = tmp[1]
+            print(best_cmax == tmp[1])
+            if best_cmax == tmp[1]:
+                max_tabu += 1
+                best_cmax = tmp[1]
+            else:
+                max_tabu = init_tabu
             tabu = tmp[2]
             current = tmp[3]
 
@@ -159,19 +155,25 @@ def Tabu_search(times, stop="stuck", max_tabu=25, iter=200, stop_time=100,  stuc
 
     if stop == "stuck":
         i = 0
-        change = False
         break_point = True
         while break_point:
-            tmp = make_search(times, tabu, max_tabu, current, best_cmax, best, change, history)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history)
             if tmp[0] != best:
                 i = 0
             else:
                 i += 1
             best = tmp[0]
-            best_cmax = tmp[1]
+            if best_cmax == tmp[1]:
+                max_tabu -= 1
+            else:
+                max_tabu = init_tabu
+                best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
-            change = tmp[4]
+            if i == critical:
+                print("active")
+                tabu = []
+                current = initialize_shedule(times, method="neh")
             if i == stuck_point:
                 break_point = False
 
