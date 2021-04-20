@@ -6,15 +6,9 @@ import TS
 import Johnson
 
 schedule = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-#print(TS.neighbourhoods_generator(schedule, function="inverse", inverse_len=7))
+data = TS.neighbourhoods_generator(schedule, function="inverse,swap", inverse_len=3)
+set_ = set(tuple(i) for i in data)
 
-functions = ["swap", "inverse", "insert"]
-data = Load.read_datest("Data/data.txt")[2]
-history = []
-init = "sequence"
-stop_func = "iter"
-for function in functions:
-    print(TS.Tabu_search(data, stop=stop_func, init_function=init,
-                                   neighbourhoods_function=function))
+print(len(data))
+print(len(set_))
 
-print(history)

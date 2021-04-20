@@ -48,13 +48,14 @@ def neighbourhoods_generator(schedule, function="swap", inverse_len=3):
     neighbourhoods_list = []
     functions = function.split(",")
     if "swap" in functions:
-        neighbourhoods_list.extend(swap_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:]))
-
+        #neighbourhoods_list.extend(swap_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:]))
+        neighbourhoods_list = swap_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list)
     if "insert" in functions:
-        neighbourhoods_list.extend(insert_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:]))
-
+        #neighbourhoods_list.extend(insert_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:]))
+        neighbourhoods_list = insert_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list)
     if "inverse" in functions:
-        neighbourhoods_list.extend(inverse_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:], inverse_len=inverse_len))
+        #neighbourhoods_list.extend(inverse_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:], inverse_len=inverse_len))
+        neighbourhoods_list = inverse_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list, inverse_len=3)
     return neighbourhoods_list
 
 
