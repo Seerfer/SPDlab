@@ -10,4 +10,4 @@ schedule = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 times = Load.readData("Data/tmp.txt")
-print(TS.Tabu_search(times))
+print(TS.Tabu_search(times, stop="iter"))

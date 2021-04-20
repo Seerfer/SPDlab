@@ -119,7 +119,8 @@ def make_search(times, tabu, max_tabu, current, best_cmax, best, history):
     return best, best_cmax, tabu, current,
 
 
-def Tabu_search(times, stop="stuck", max_tabu=20, iter=200, stop_time=100,  stuck_point=20, critical=10):
+def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck_point=20):
+    global i, global_cmax
     history = []
     init_tabu = max_tabu
     schedule = initialize_shedule(times, method="johnson")
@@ -130,14 +131,13 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=200, stop_time=100,  stuc
 
     if stop == "iter":
         for i in range(0, iter):
-            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history)
             best = tmp[0]
-            print(best_cmax == tmp[1])
             if best_cmax == tmp[1]:
-                max_tabu += 1
-                best_cmax = tmp[1]
+                max_tabu -= 1
             else:
                 max_tabu = init_tabu
+                best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
 
@@ -145,13 +145,35 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=200, stop_time=100,  stuc
     if stop == "times":
         start = perf_counter()
         end = 0
+        after_reset = True
         while end-start < stop_time:
             tmp = make_search(times, tabu, max_tabu, current, best_cmax, best, history)
+            if tmp[0] != best:
+                i = 0
+            else:
+                i += 1
             best = tmp[0]
+            if best_cmax == tmp[1]:
+                max_tabu -= 1
             best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
+
+            if i == 10:
+                print("reset")
+                global_cmax = best_cmax
+                after_reset = True
+                i = 0
+                current = initialize_shedule(times, method="random")
+                tabu = [current]
+                best_cmax = Cmax.count_cmax(schedule, list((map(list, zip(*times)))))
+                best = current
+
+            if after_reset:
+                if best_cmax < global_cmax:
+                    global_cmax = best_cmax
             end = perf_counter()
+
 
     if stop == "stuck":
         i = 0
@@ -170,13 +192,47 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=200, stop_time=100,  stuc
                 best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
-            if i == critical:
-                print("active")
-                tabu = []
-                current = initialize_shedule(times, method="neh")
             if i == stuck_point:
                 break_point = False
 
-    plt.plot(list(range(len(history))), history)
-    plt.show()
-    return best, best_cmax
+    if stop == "forever":
+        i = 0
+        after_reset = False
+        while True:
+            tmp = make_search(times, tabu, max_tabu, current, best_cmax, best, history)
+            if tmp[0] != best:
+                i = 0
+            else:
+                i += 1
+            best = tmp[0]
+            if best_cmax == tmp[1]:
+                max_tabu -= 1
+            best_cmax = tmp[1]
+            tabu = tmp[2]
+            current = tmp[3]
+
+            if i == 10:
+                print("reset")
+                global_cmax = best_cmax
+                after_reset = True
+                i = 0
+                current = initialize_shedule(times, method="random")
+                tabu = [current]
+                best_cmax = Cmax.count_cmax(schedule, list((map(list, zip(*times)))))
+                best = current
+
+            if after_reset:
+                if best_cmax < global_cmax:
+                    global_cmax = best_cmax
+                    global_best = best
+                    file = open("best.txt", "w")
+                    file.write(f"{global_cmax} : {global_best}")
+                    file.close()
+            else:
+                file = open("best.txt", "w")
+                file.write(f"{best_cmax} : {best}")
+                file.close()
+
+    #plt.plot(list(range(len(history))), history)
+    #plt.show()
+    return best, best_cmax, history
