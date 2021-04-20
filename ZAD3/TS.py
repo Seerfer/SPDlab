@@ -105,12 +105,12 @@ def initialize_shedule(times, method="random"):
         return list(range(1, len(times)+1))
 
 
-def make_search(times, tabu, max_tabu, current, best_cmax, best, history):
-    neighbourhoods = neighbourhoods_generator(current,function="swap")
+def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method):
+    neighbourhoods = neighbourhoods_generator(current,function=method)
     tmp_tabu = tabu[-max_tabu:]
     current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:], current)
     history.append(current_cmax)
-    print(f"best: {best_cmax}            current: {current_cmax}")
+    #print(f"best: {best_cmax}            current: {current_cmax}")
     tabu.append(current)
     if current_cmax < best_cmax:
         best = current
@@ -119,11 +119,12 @@ def make_search(times, tabu, max_tabu, current, best_cmax, best, history):
     return best, best_cmax, tabu, current,
 
 
-def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck_point=20):
+def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck_point=20, init_function="johnson",
+                neighbourhoods_function="swap"):
     global i, global_cmax
     history = []
     init_tabu = max_tabu
-    schedule = initialize_shedule(times, method="johnson")
+    schedule = initialize_shedule(times, method=init_function)
     best = schedule
     best_cmax = Cmax.count_cmax(schedule, list((map(list, zip(*times)))))
     tabu = [schedule]
@@ -131,7 +132,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
 
     if stop == "iter":
         for i in range(0, iter):
-            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             best = tmp[0]
             if best_cmax == tmp[1]:
                 max_tabu -= 1
@@ -147,7 +148,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
         end = 0
         after_reset = True
         while end-start < stop_time:
-            tmp = make_search(times, tabu, max_tabu, current, best_cmax, best, history)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             if tmp[0] != best:
                 i = 0
             else:
@@ -179,7 +180,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
         i = 0
         break_point = True
         while break_point:
-            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             if tmp[0] != best:
                 i = 0
             else:
@@ -199,7 +200,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
         i = 0
         after_reset = False
         while True:
-            tmp = make_search(times, tabu, max_tabu, current, best_cmax, best, history)
+            tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             if tmp[0] != best:
                 i = 0
             else:
