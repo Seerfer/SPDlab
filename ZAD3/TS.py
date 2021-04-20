@@ -108,6 +108,8 @@ def initialize_shedule(times, method="random"):
 def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method):
     neighbourhoods = neighbourhoods_generator(current,function=method)
     tmp_tabu = tabu[-max_tabu:]
+    if max_tabu < 0:
+        tmp_tabu = []
     current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:], current)
     history.append(current_cmax)
     #print(f"best: {best_cmax}            current: {current_cmax}")
