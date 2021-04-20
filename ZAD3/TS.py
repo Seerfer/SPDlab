@@ -44,7 +44,7 @@ def inverse_neighbourhoods(schedule, neighbourhoods, inverse_len):
             neighbourhoods.append(tmp1)
     return neighbourhoods
 
-def neighbourhoods_generator(schedule, function="swap", inverse_len=4):
+def neighbourhoods_generator(schedule, function="swap", inverse_len=3):
     neighbourhoods_list = []
     functions = function.split(",")
     if "swap" in functions:
