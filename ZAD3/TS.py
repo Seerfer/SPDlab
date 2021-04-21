@@ -48,13 +48,10 @@ def neighbourhoods_generator(schedule, function="swap", inverse_len=3):
     neighbourhoods_list = []
     functions = function.split(",")
     if "swap" in functions:
-        #neighbourhoods_list.extend(swap_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:]))
         neighbourhoods_list = swap_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list)
     if "insert" in functions:
-        #neighbourhoods_list.extend(insert_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:]))
         neighbourhoods_list = insert_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list)
     if "inverse" in functions:
-        #neighbourhoods_list.extend(inverse_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list[:], inverse_len=inverse_len))
         neighbourhoods_list = inverse_neighbourhoods(schedule, neighbourhoods=neighbourhoods_list, inverse_len=3)
     return neighbourhoods_list
 
@@ -149,7 +146,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
     if stop == "times":
         start = perf_counter()
         end = 0
-        after_reset = True
+        after_reset = False
         while end-start < stop_time:
             tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             if tmp[0] != best:
@@ -164,7 +161,6 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
             current = tmp[3]
 
             if i == 10:
-                print("reset")
                 global_cmax = best_cmax
                 after_reset = True
                 i = 0
@@ -216,7 +212,6 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
             current = tmp[3]
 
             if i == 10:
-                print("reset")
                 global_cmax = best_cmax
                 after_reset = True
                 i = 0
