@@ -107,7 +107,7 @@ def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method
     tmp_tabu = tabu[-max_tabu:]
     current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:], current)
     history.append(current_cmax)
-    print(f"best: {best_cmax}            current: {current_cmax}")
+    #print(f"best: {best_cmax}            current: {current_cmax}")
     tabu.append(current)
     if current_cmax < best_cmax:
         best = current
