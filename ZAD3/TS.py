@@ -1,8 +1,9 @@
+import math
+
 from neh import NEHmodifications, Cmax
 from ZAD3 import Johnson
 import random
 from time import perf_counter
-import matplotlib.pyplot as plt
 
 """
 Funkcje potrzebne do generowania listy sąsiedztw i szukania najlepszego elementu z tej listy
@@ -57,8 +58,7 @@ def neighbourhoods_generator(schedule, function="swap", inverse_len=3):
 
 
 def best_neighbourhood(schedules, times, tabu, current):
-    cmin = Cmax.count_cmax(current, list((map(list, zip(*times)))))
-    change = False
+    cmin = math.inf
     tmp = schedules[0]
     for schedule in schedules:
         if schedule not in tabu:
@@ -66,8 +66,7 @@ def best_neighbourhood(schedules, times, tabu, current):
             if cmax < cmin:
                 cmin = cmax
                 tmp = schedule
-                change = True
-    if not change:
+    if cmin == math.inf:
         for schedule in tabu:
             cmax = Cmax.count_cmax(schedule, list((map(list, zip(*times)))))
             if cmax < cmin:
@@ -106,11 +105,9 @@ def initialize_shedule(times, method="random"):
 def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method):
     neighbourhoods = neighbourhoods_generator(current,function=method)
     tmp_tabu = tabu[-max_tabu:]
-    if max_tabu < 0:
-        tmp_tabu = []
     current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:], current)
     history.append(current_cmax)
-    #print(f"best: {best_cmax}            current: {current_cmax}")
+    print(f"best: {best_cmax}            current: {current_cmax}")
     tabu.append(current)
     if current_cmax < best_cmax:
         best = current
@@ -123,7 +120,6 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
                 neighbourhoods_function="swap"):
     global i, global_cmax
     history = []
-    init_tabu = max_tabu
     schedule = initialize_shedule(times, method=init_function)
     best = schedule
     best_cmax = Cmax.count_cmax(schedule, list((map(list, zip(*times)))))
@@ -134,11 +130,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
         for i in range(0, iter):
             tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             best = tmp[0]
-            if best_cmax == tmp[1]:
-                max_tabu -= 1
-            else:
-                max_tabu = init_tabu
-                best_cmax = tmp[1]
+            best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
 
@@ -154,8 +146,6 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
             else:
                 i += 1
             best = tmp[0]
-            if best_cmax == tmp[1]:
-                max_tabu -= 1
             best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
@@ -185,11 +175,7 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
             else:
                 i += 1
             best = tmp[0]
-            if best_cmax == tmp[1]:
-                max_tabu -= 1
-            else:
-                max_tabu = init_tabu
-                best_cmax = tmp[1]
+            best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
             if i == stuck_point:
@@ -205,8 +191,6 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
             else:
                 i += 1
             best = tmp[0]
-            if best_cmax == tmp[1]:
-                max_tabu -= 1
             best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
@@ -232,6 +216,5 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
                 file.write(f"{best_cmax} : {best}")
                 file.close()
 
-    #plt.plot(list(range(len(history))), history)
-    #plt.show()
+
     return best, best_cmax, history
