@@ -45,6 +45,7 @@ def inverse_neighbourhoods(schedule, neighbourhoods, inverse_len):
             neighbourhoods.append(tmp1)
     return neighbourhoods
 
+
 def neighbourhoods_generator(schedule, function="swap", inverse_len=3):
     neighbourhoods_list = []
     functions = function.split(",")
@@ -57,7 +58,7 @@ def neighbourhoods_generator(schedule, function="swap", inverse_len=3):
     return neighbourhoods_list
 
 
-def best_neighbourhood(schedules, times, tabu, current):
+def best_neighbourhood(schedules, times, tabu):
     cmin = math.inf
     tmp = schedules[0]
     for schedule in schedules:
@@ -75,15 +76,18 @@ def best_neighbourhood(schedules, times, tabu, current):
 
     return cmin, tmp
 
+
 def global_neighbourhoods(current, zones=40, zone_scale=97):
     tmp = []
     tmp_neigh = neighbourhoods_generator(current, function="inverse",
-                                                  inverse_len=len(current)-zones)
+                                         inverse_len=len(current) - zones)
     for neigh in tmp_neigh:
         print(neigh)
         tmp.extend(neighbourhoods_generator(neigh, function="inverse",
-                                                    inverse_len=len(current)-zone_scale))
+                                            inverse_len=len(current) - zone_scale))
     return tmp
+
+
 """
 Funkcje do realizacji algorytmu tabu search
 """
@@ -95,19 +99,19 @@ def initialize_shedule(times, method="random"):
     if method == "johnson":
         return Johnson.multi_machines_Johnson(times)
     if method == "random":
-        tmp = list(range(1, len(times)+1))
+        tmp = list(range(1, len(times) + 1))
         random.shuffle(tmp)
         return tmp
     if method == "sequence":
-        return list(range(1, len(times)+1))
+        return list(range(1, len(times) + 1))
 
 
 def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method):
-    neighbourhoods = neighbourhoods_generator(current,function=method)
+    neighbourhoods = neighbourhoods_generator(current, function=method)
     tmp_tabu = tabu[-max_tabu:]
-    current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:], current)
+    current_cmax, current = best_neighbourhood(neighbourhoods, times, tmp_tabu[:])
     history.append(current_cmax)
-    #print(f"best: {best_cmax}            current: {current_cmax}")
+    print(f"best: {best_cmax}            current: {current_cmax}")
     tabu.append(current)
     if current_cmax < best_cmax:
         best = current
@@ -116,9 +120,9 @@ def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method
     return best, best_cmax, tabu, current,
 
 
-def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck_point=20, init_function="johnson",
+def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100, stuck_point=20, init_function="johnson",
                 neighbourhoods_function="swap"):
-    global i, global_cmax
+    #global i, global_cmax
     history = []
     schedule = initialize_shedule(times, method=init_function)
     best = schedule
@@ -134,12 +138,11 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
             tabu = tmp[2]
             current = tmp[3]
 
-
     if stop == "times":
         start = perf_counter()
         end = 0
         after_reset = False
-        while end-start < stop_time:
+        while end - start < stop_time:
             tmp = make_search(times, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             if tmp[0] != best:
                 i = 0
@@ -163,7 +166,6 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
                 if best_cmax < global_cmax:
                     global_cmax = best_cmax
             end = perf_counter()
-
 
     if stop == "stuck":
         i = 0
@@ -215,6 +217,5 @@ def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100,  stuck
                 file = open("best.txt", "w")
                 file.write(f"{best_cmax} : {best}")
                 file.close()
-
 
     return best, best_cmax, history
