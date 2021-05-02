@@ -1,5 +1,7 @@
 import Load
 import Cmax
-
+import schrage
 tasks = Load.readData("test.txt")
-print(Cmax.Cmax(tasks))
+
+
+print(schrage.schrage(tasks))
