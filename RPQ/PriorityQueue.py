@@ -1,15 +1,16 @@
 from Task import Task
 
 class PriorityQueue:
-    def __init__(self, tasks, key):
-        self.queue = []
-
+    def __init__(self, tasks:list, key):
         if key == "q":
-            pass
-        if key == "r":
-            pass
+            self.queue = sorted(tasks, key=lambda task: task.q)
+        elif key == "r":
+            self.queue = sorted(tasks, key=lambda task: task.r)
         else:
-            raise RuntimeError("Wrong key")
+            self.queue = tasks
+
+    def pop(self):
+        return self.queue.pop(0)
 
     @property
     def size(self):
