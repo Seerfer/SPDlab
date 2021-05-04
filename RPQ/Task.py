@@ -6,7 +6,7 @@ class Task:
         self. q = int(q)
 
     def __repr__(self):
-        return f"Task {self.id}:   r={self.r}, p={self.p}, q={self.q}"
+        return f"Task {self.id}:r={self.r}, p={self.p}, q={self.q}   "
 
     def get_r(self):
         return self.r

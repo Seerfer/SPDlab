@@ -1,10 +1,14 @@
 import math
 from Task import Task
 
-class Heap:
-    def __init__(self, key, max=math.inf):
+class Heapq:
+    def __init__(self, key="r", max=math.inf, tasks=[]):
         self.data = []
         self.max = max
+        self.key = key
+
+        for task in tasks:
+            self.insert(task)
 
     def __len__(self) -> int:
         return len(self.data)
@@ -34,7 +38,7 @@ class Heap:
     def insert(self, el):
         self.data.append(el)
         index = len(self.data) - 1
-        if index > 0 and self._compare(self.data[index], self.data[self._parent(index)]):
+        if index > 0 and self._compare(self.data[index], self.data[self._parent(index)], key=self.key):
             parent = self._parent(index)
             self.data[index], self.data[parent] = self.data[parent], self.data[index]
             index = parent
@@ -43,9 +47,9 @@ class Heap:
         left_index = self._leftChild(index)
         right_index = self._rightChild(index)
         greatest_elem_index = index
-        if left_index < len(self) and self._compare(self.data[left_index], self.data[index]):
+        if left_index < len(self) and self._compare(self.data[left_index], self.data[index], key=self.key):
             greatest_elem_index = left_index
-        if right_index < len(self) and self._compare(self.data[right_index], self.data[greatest_elem_index]):
+        if right_index < len(self) and self._compare(self.data[right_index], self.data[greatest_elem_index], key=self.key):
             greatest_elem_index = right_index
         if greatest_elem_index != index:
             self.data[greatest_elem_index], self.data[index] = self.data[index], self.data[greatest_elem_index]

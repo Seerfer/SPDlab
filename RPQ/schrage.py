@@ -21,4 +21,5 @@ def schrage(tasks: List[Task]) -> List[Task]:
             order.append(e.id)
             t += e.get_p()
             Cmax = max(Cmax, t+e.q)
-    return order,Cmax
+
+    return order, Cmax
