@@ -3,10 +3,10 @@ import Cmax
 import schrage
 import schrage_pmtn
 from Heapq import Heapq
+import schrage_pmtn
 
 tasks = Load.readData("test.txt")
-kolejka = Heapq(tasks=tasks)
-print(kolejka)
-
 #print(schrage.schrage(tasks))
-#print(schrage_pmtn.schrage_pmtn(tasks))
+#print(schrage.schrage_heapq(tasks))
+print(schrage_pmtn.schrage_pmtn(tasks))
+print(schrage_pmtn.schrage_pmtn_heapq(tasks))

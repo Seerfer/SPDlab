@@ -1,6 +1,7 @@
 from Task import Task
 from typing import List
 import sys
+from Heapq import Heapq
 
 def schrage_pmtn(tasks: List[Task]) -> List[Task]:
     ready = set()
@@ -13,7 +14,7 @@ def schrage_pmtn(tasks: List[Task]) -> List[Task]:
             e = min(not_ready, key=Task.get_r)
             ready.add(e)
             not_ready.remove(e)
-            if e.get_q() > l.get_q():
+            if e.q > l.q:
                 l.p = t - e.r
                 t = e.r
                 if l.p > 0:
@@ -27,4 +28,29 @@ def schrage_pmtn(tasks: List[Task]) -> List[Task]:
             l = e
             t += e.p
             Cmax=max(Cmax,t+e.q)
+    return Cmax
+
+def schrage_pmtn_heapq(tasks: List[Task]) -> List[Task]:
+    ready = Heapq(key="q", reverse=True)
+    Cmax = 0
+    l = Task(0, 0, sys.maxsize, 0)
+    not_ready = Heapq(tasks=tasks, key="r", reverse=False)
+    t = not_ready.top.r
+    while ready or not_ready:
+        while not_ready and not_ready.top.r <= t:
+            e = not_ready.pop()
+            ready.insert(e)
+            if e.q > l.q:
+                l.p = t - e.r
+                t = e.r
+                if l.p > 0:
+                    ready.insert(l)
+        if not ready:
+            t = not_ready.top.r
+        else:
+            e = ready.pop()
+            l = e
+            t += e.p
+            Cmax = max(Cmax, t + e.q)
+
     return Cmax
