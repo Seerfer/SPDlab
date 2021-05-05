@@ -3,7 +3,8 @@ from typing import List
 import sys
 from Heapq import Heapq
 
-def schrage_pmtn(tasks: List[Task]) -> List[Task]:
+
+def schrage_pmtn(tasks: List[Task]):
     ready = set()
     Cmax = 0
     not_ready = set(tasks)
@@ -27,10 +28,11 @@ def schrage_pmtn(tasks: List[Task]) -> List[Task]:
             ready.remove(e)
             l = e
             t += e.p
-            Cmax=max(Cmax,t+e.q)
+            Cmax = max(Cmax, t + e.q)
     return Cmax
 
-def schrage_pmtn_heapq(tasks: List[Task]) -> List[Task]:
+
+def schrage_pmtn_heapq(tasks: List[Task]):
     ready = Heapq(key="q", reverse=True)
     Cmax = 0
     l = Task(0, 0, sys.maxsize, 0)

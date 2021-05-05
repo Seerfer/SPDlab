@@ -2,7 +2,8 @@ from Task import Task
 from typing import List
 from Heapq import Heapq
 
-def schrage(tasks: List[Task]) -> List[Task]:
+
+def schrage(tasks: List[Task]):
     order = []
     ready = set()
     Cmax = 0
@@ -21,11 +22,12 @@ def schrage(tasks: List[Task]) -> List[Task]:
             ready.remove(e)
             order.append(e.id)
             t += e.get_p()
-            Cmax = max(Cmax, t+e.q)
+            Cmax = max(Cmax, t + e.q)
 
     return order, Cmax
 
-def schrage_heapq(tasks: List[Task]) -> List[Task]:
+
+def schrage_heapq(tasks: List[Task]):
     order = []
     ready = Heapq(key="q", reverse=True)
     Cmax = 0
@@ -41,6 +43,6 @@ def schrage_heapq(tasks: List[Task]) -> List[Task]:
             ready.pop()
             order.append(e.id)
             t += e.p
-            Cmax = max(Cmax, t+e.q)
+            Cmax = max(Cmax, t + e.q)
 
     return order, Cmax
