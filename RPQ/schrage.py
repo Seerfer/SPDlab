@@ -8,17 +8,17 @@ def schrage(tasks: List[Task]):
     ready = set()
     Cmax = 0
     not_ready = set(tasks)
-    t = min(task.get_r() for task in not_ready)
+    t = min(task.r() for task in not_ready)
     while ready or not_ready:
-        while not_ready and min(task.get_r() for task in not_ready) <= t:
-            e = min(not_ready, key=Task.get_r)
+        while not_ready and min(task.r() for task in not_ready) <= t:
+            e = min(not_ready, key=Task.r)
             ready.add(e)
             not_ready.remove(e)
 
         if not ready:
-            t = min(task.get_r() for task in not_ready)
+            t = min(task.r() for task in not_ready)
         else:
-            e = max(ready, key=Task.get_q)
+            e = max(ready, key=Task.q)
             ready.remove(e)
             order.append(e.id)
             t += e.get_p()
@@ -52,10 +52,10 @@ def schrage_pmtn(tasks: List[Task]):
     Cmax = 0
     not_ready = set(tasks)
     l = Task(0, 0, sys.maxsize, 0)
-    t = min(task.get_r() for task in not_ready)
+    t = min(task.r() for task in not_ready)
     while ready or not_ready:
-        while not_ready and min(task.get_r() for task in not_ready) <= t:
-            e = min(not_ready, key=Task.get_r)
+        while not_ready and min(task.r() for task in not_ready) <= t:
+            e = min(not_ready, key=Task.r)
             ready.add(e)
             not_ready.remove(e)
             if e.q > l.q:
@@ -65,9 +65,9 @@ def schrage_pmtn(tasks: List[Task]):
                     ready.add(l)
 
         if not ready:
-            t = min(task.get_r() for task in not_ready)
+            t = min(task.r() for task in not_ready)
         else:
-            e = max(ready, key=Task.get_q)
+            e = max(ready, key=Task.q)
             ready.remove(e)
             l = e
             t += e.p
