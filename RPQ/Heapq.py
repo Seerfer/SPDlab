@@ -4,7 +4,7 @@ from io import StringIO
 
 
 class Heapq:
-    def __init__(self, tasks=list(), key="r", max=math.inf, reverse=False):
+    def __init__(self, tasks=[], key="r", max=math.inf, reverse=False):
         self.data = []
         self.max = max
         self.key = key

@@ -2,6 +2,7 @@ import Load
 import schrage
 
 tasks = Load.readData("Data/in200.txt")
+print(tasks)
 print(schrage.schrage(tasks))
 print(schrage.schrage_heapq(tasks))
 print(schrage.schrage_pmtn(tasks))
