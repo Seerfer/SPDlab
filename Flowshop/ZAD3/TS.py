@@ -117,7 +117,7 @@ def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method
         best = current
         best_cmax = current_cmax
 
-    return best, best_cmax, tabu, current,
+    return best, best_cmax, tabu, current
 
 
 def Tabu_search(times, stop="stuck", max_tabu=20, iter=80, stop_time=100, stuck_point=20, init_function="johnson",

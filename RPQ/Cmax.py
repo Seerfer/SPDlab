@@ -1,4 +1,9 @@
-def Cmax(tasks):
+def cmax(tasks_list, schedule):
+    tasks = []
+    for i in schedule:
+        for task in tasks_list:
+            if task.id == i:
+                tasks.append(task)
     S = [tasks[0].r]
     for i in range(1, len(tasks)):
         previous = tasks[i - 1]
