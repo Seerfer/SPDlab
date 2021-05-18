@@ -1,9 +1,9 @@
 import math
 
 from neh import NEHmodifications, Cmax
-from ZAD3 import Johnson
 import random
 from time import perf_counter
+import Johnson
 
 """
 Funkcje potrzebne do generowania listy sąsiedztw i szukania najlepszego elementu z tej listy
