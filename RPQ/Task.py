@@ -1,3 +1,4 @@
+import copy
 class Task:
     def __init__(self, r, p, q, id):
         self.id = int(id)
@@ -28,3 +29,18 @@ class Task:
     def change_q(self, q: int):
         self.q = q
         return self
+
+    def copy(self):
+        return copy.copy(self)
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Task):
+            return self.id == other.id
+        else:
+            return False
+
+    def __ne__(self, other) -> bool:
+        return not (self == other)
+
+    def __hash__(self) -> int:
+        return hash(self.id)

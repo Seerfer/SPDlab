@@ -55,7 +55,7 @@ def schrage_pmtn(tasks: List[Task]):
     ready = set()
     Cmax = 0
     not_ready = set(tasks)
-    l = Task(0, 0, sys.maxsize, 0)
+    l = Task(0, 0, sys.maxsize, -1)
     t = min(task.get_r() for task in not_ready)
     while ready or not_ready:
         while not_ready and min(task.get_r() for task in not_ready) <= t:
@@ -63,7 +63,7 @@ def schrage_pmtn(tasks: List[Task]):
             ready.add(e)
             not_ready.remove(e)
             if e.get_q() > l.get_q():
-                l.p = t - e.r
+                l = l.copy().change_p(t - e.get_r()) ##tutaj byla zmiana na z kopia
                 t = e.r
                 if l.p > 0:
                     ready.add(l)
@@ -90,7 +90,7 @@ def schrage_pmtn_heapq(tasks: List[Task]):
             e = not_ready.pop()
             ready.insert(e)
             if e.q > l.q:
-                l.p = t - e.r
+                l = l.copy().change_p(t - e.get_r())
                 t = e.r
                 if l.p > 0:
                     ready.insert(l)

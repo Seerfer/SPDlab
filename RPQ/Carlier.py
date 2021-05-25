@@ -17,10 +17,11 @@ def find_a(order,U,b):
     return a
 
 def find_c(a, b, order):
+    c = None
     for i in range(a, b):
         if (order[i].get_q()) < (order[b].get_q()):
-            return i
-    return None
+             c = i
+    return c
 
 def find_RPQ(order, b, c):
     R_prim = order[c+1].get_r()
