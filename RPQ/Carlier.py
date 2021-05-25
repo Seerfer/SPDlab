@@ -49,6 +49,7 @@ class Carlier:
 
     def carlier(self,tasks):
         order, U, C = schrage.schrage(tasks)
+        i = 0
 
         if U < self.UB:
             self.UB = U
@@ -65,7 +66,7 @@ class Carlier:
         order[c].change_r(max(order[c].get_r(), P_prim + R_prim))
 
         LB = schrage.schrage_pmtn(tasks)
-        if LB < U:
+        if LB < self.UB:
             self.carlier(tasks)
 
         order[c].change_r(R_saved)
@@ -73,7 +74,7 @@ class Carlier:
         order[c].change_q(max(order[c].get_q(), P_prim + Q_prim))
 
         LB = schrage.schrage_pmtn(tasks)
-        if LB < U:
+        if LB < self.UB:
             self.carlier(tasks)
 
         order[c].change_q(Q_saved)
@@ -97,7 +98,7 @@ class Carlier:
         order[c].change_r(max(order[c].get_r(), P_prim + R_prim))
 
         LB = schrage.schrage_pmtn_heapq(tasks)
-        if LB < U:
+        if LB < self.UB:
             self.carlier(tasks)
 
         order[c].change_r(R_saved)
@@ -105,7 +106,40 @@ class Carlier:
         order[c].change_q(max(order[c].get_q(), P_prim + Q_prim))
 
         LB = schrage.schrage_pmtn_heapq(tasks)
-        if LB < U:
+        if LB < self.UB:
+            self.carlier(tasks)
+
+        order[c].change_q(Q_saved)
+        return self.UB, order_only_id(order)
+
+    def carlier2(self,tasks):
+        order, U, C = schrage.schrage(tasks)
+        i = 0
+
+        if U < self.UB:
+            self.UB = U
+
+        b = find_b(order, U, C)
+        a = find_a(order, U, b)
+        c = find_c(a, b, order)
+
+        if c is None:
+            return self.UB,order_only_id(order)
+
+        R_prim, P_prim, Q_prim = find_RPQ(order, b, c)
+        R_saved = order[c].get_r()
+        order[c].change_r(max(order[c].get_r(), P_prim + R_prim))
+
+        LB = schrage.schrage_pmtn(tasks)
+        if LB < self.UB:
+            self.UB = min( self.carlier(tasks))
+
+        order[c].change_r(R_saved)
+        Q_saved = order[c].get_q()
+        order[c].change_q(max(order[c].get_q(), P_prim + Q_prim))
+
+        LB = schrage.schrage_pmtn(tasks)
+        if LB < self.UB:
             self.carlier(tasks)
 
         order[c].change_q(Q_saved)
