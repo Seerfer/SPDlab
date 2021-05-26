@@ -1,7 +1,6 @@
 import random
 import math
 import Cmax
-
 """
 Funkcje potrzebne do generowania listy sąsiedztw i szukania najlepszego elementu z tej listy
 """
@@ -93,9 +92,8 @@ def make_search(times, tabu, max_tabu, current, best_cmax, best, history, method
     return best, best_cmax, tabu, current
 
 
-def Tabu_search(tasks, stop="stuck", max_tabu=20, iter=80, stop_time=100, stuck_point=20, init_function="johnson",
+def Tabu_search(tasks, max_tabu=30, iter=100,
                 neighbourhoods_function="swap"):
-    #global i, global_cmax
     history = []
     schedule = initialize_schedule(tasks)
     best = schedule
@@ -103,10 +101,13 @@ def Tabu_search(tasks, stop="stuck", max_tabu=20, iter=80, stop_time=100, stuck_
     tabu = [schedule]
     current = schedule[:]
 
-    if stop == "iter":
-        for i in range(0, iter):
+    for _ in range(3):
+        for _ in range(iter):
             tmp = make_search(tasks, tabu[:], max_tabu, current, best_cmax, best, history, neighbourhoods_function)
             best = tmp[0]
             best_cmax = tmp[1]
             tabu = tmp[2]
             current = tmp[3]
+        print("restart")
+        current=initialize_schedule(tasks)
+    return best_cmax
