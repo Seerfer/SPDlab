@@ -81,30 +81,30 @@ class Carlier:
         return self.UB, order_only_id(order)
 
     def carlier_heapq(self,tasks):
-        order, U, C = schrage.schrage_heapq(tasks)
+        order, U, C = schrage.schrage_heapq(tasks) # wywolanie schrage, przypisanie kolejnosci , Cmaxa i kolejnych cwil czasowcyh
 
-        if U < self.UB:
-            self.UB = U
+        if U < self.UB:   # sprawdzenie czy Cmax jest mniejszy niz ograniczenie górne
+            self.UB = U   # przypisanie ograniczenia górnego jako Cmaxa
 
-        b = find_b(order, U, C)
-        a = find_a(order, U, b)
-        c = find_c(a, b, order)
+        b = find_b(order, U, C)  # znalezienie zadania b, ostatniego na sciezce kryrtycznej
+        a = find_a(order, U, b) # znalezienia zadania a, pierwsze zzadanie po którym nie wystepuje przestoj pomiedzy a i b
+        c = find_c(a, b, order) # znalazienie C jako najdalsze między a i b, którego Q jest mniejsze niz Q(b)
 
-        if c is None:
-            return self.UB,order_only_id(order)
-
+        if c is None:    # sprawdzenie czy istnieje c, jezeli nie obecne rozwiazenie jest optymalne
+            return self.UB,order_only_id(order) # zwrocenie Cmaxa i kolejnosci(tylko po id zadań)
+        #znalezieie R'P'Q' miedzy c i b
+        # R' najdluszczy czas przygotowania, P' łaczny czas wykonywania, Q' najdluszy czas dostarczenia
         R_prim, P_prim, Q_prim = find_RPQ(order, b, c)
-        R_saved = order[c].get_r()
-        order[c].change_r(max(order[c].get_r(), P_prim + R_prim))
+        R_saved = order[c].get_r() # zapisanie zadania referencyjnego
+        order[c].change_r(max(order[c].get_r(), P_prim + R_prim)) # zmiana R zadania referencyjnego tak aby wykonywało sie ostatnie
 
-        LB = schrage.schrage_pmtn_heapq(tasks)
+        LB = schrage.schrage_pmtn_heapq(tasks)  # dolne ograniczenie jako Cmax z algorytmu schrage z przerwaniami
         if LB < self.UB:
-            self.carlier(tasks)
+            self.carlier(tasks)     # rekurencyjne wywołanie algorytmu
 
-        order[c].change_r(R_saved)
-        Q_saved = order[c].get_q()
-        order[c].change_q(max(order[c].get_q(), P_prim + Q_prim))
-
+        order[c].change_r(R_saved) # wczytania zadania referencyjnego
+        Q_saved = order[c].get_q() # zapisanie Q zadania referencyjnego
+        order[c].change_q(max(order[c].get_q(), P_prim + Q_prim)) # zmiana Q zadania referencyjnego, aby było wykonywane jako pierwsze
         LB = schrage.schrage_pmtn_heapq(tasks)
         if LB < self.UB:
             self.carlier(tasks)
