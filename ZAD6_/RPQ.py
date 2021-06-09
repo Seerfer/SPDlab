@@ -1,4 +1,5 @@
-
+import os
+THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 class RPQ_Task:
     def __init__(self, task_number, r, p, q):
         self.id: int = task_number
@@ -11,26 +12,16 @@ class RPQ_Instance:
     tasks_number: int # liczba wszystkich zadań
 
     @staticmethod
-    def load_from_file(file_path: str):
+    def load_from_file(name):
         """ Metoda wczytująca instancje z pliku - to zostawiam Państwu, na razie na sztywno dodana mała instancja."""
         instance = RPQ_Instance()
-        try:
-            with open(file_path, "r") as file:
-                instance.tasks_number, columns = [int(x) for x in next(file).split()]
-                instance.tasks = []
-
-                for i in range(0, instance.tasks_number):
-                    row = next(file).split()
-                    r = (int(row[0]))
-                    p = (int(row[1]))
-                    q = (int(row[2]))
-                    task = RPQ_Task(i, r, p, q)
-                    instance.tasks.append(task)
-
-        except FileNotFoundError:
-            print("File not found.")
-            raise FileNotFoundError
-
+        with open(os.path.join(THIS_FOLDER, name), "r") as data:
+            line = int(data.readline())
+            instance.tasks_number = line
+            instance.tasks = []
+            for id in range(line):
+                r, p, q = data.readline().split()
+                instance.tasks.append(RPQ_Task(id, int(r), int(p), int(q)))
         return instance
 
     def get_r(self, task_number):
@@ -44,10 +35,10 @@ class RPQ_Instance:
 
 
 
-def solve_rpq_with_solver(instance: RPQ_Instance):
+def solve_rpq_with_solver(file):
     """ W końcu funkcja rozwiązująca instancje problemu RPQ wykorzystując metodę CP z biblioteki or-tools"""
     from ortools.sat.python import cp_model # importujemy model CP z biblioteki or-tools
-
+    instance = RPQ_Instance.load_from_file(file)
     model = cp_model.CpModel() # inicjalizacja modelu - przechowa nasze zmienne oraz ograniczenia naszego problemu
 
     # Model będzie operować na zmiennych całkowitoliczbowych - jakie zmienne? Czas rozpoczęcia, czas zakończenia, cmax...
@@ -77,7 +68,7 @@ def solve_rpq_with_solver(instance: RPQ_Instance):
     # wewnątrz modelu i nie jest to typowy int - próba sprawdzenia, czy jest to pythonowy typ int zwróci fałsz:
     # aby stworzyć tą zmienną musimy podać zakres oraz nazwę zmiennej
     cmax_optimalization_objective = model.NewIntVar(variable_min_value, variable_max_value, 'cmax_makespan')
-    print("type of cmax:", type(cmax_optimalization_objective), isinstance(cmax_optimalization_objective, int)) # można zakomentować bez żalu
+    #print("type of cmax:", type(cmax_optimalization_objective), isinstance(cmax_optimalization_objective, int)) # można zakomentować bez żalu
 
     # więcej zmiennych: dla czasu rozpoczęcia, zakończenia i interwałów, ale dla każdego zdania więc korzystamy z pętli
     for task_number in range(instance.tasks_number):
@@ -133,17 +124,12 @@ def solve_rpq_with_solver(instance: RPQ_Instance):
     pi_order.sort(key=lambda x: x[1])
     pi_order = [x[0] for x in pi_order] # modyfikujemy naszą listę, aby przechowywać tylko numer zadań, bez czasów rozpoczęć
 
+    print(f"Script ended\ncmax: {solver.ObjectiveValue()}\norder: {pi_order}\nis optimal? {status_readable}")
     return solver.ObjectiveValue(), pi_order, status_readable # zwracamy cmax, kolejność wykonywania zadań oraz informacje czy znaleźliśmy optimum
 
 
+solve_rpq_with_solver("rpq1.txt")
 
-if __name__ == '__main__':
-    # ten if będzie spełniony, tylko jeśli odpalimy bezpośrednio ten skrypt, nie jeśli zaimportujemy ten plik z innego pliku
-
-    # tutaj przydałaby się jeszcze pętla, aby odpalać metodę dla każdej instancji z foleru...
-    test_instance = RPQ_Instance.load_from_file("rpq1.txt")
-    cmax, pi_order, status = solve_rpq_with_solver(test_instance)
-    print(f"Script ended, cmax: {cmax}, order: {pi_order}\nis optimal? {status}")
 
 
 # Na koniec jeszcze jedna uwaga: w wypadku błędów proszę pierwsze co sprawdzić poprawność instalacji biblioteki oraz czy

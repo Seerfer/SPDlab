@@ -2,6 +2,7 @@ import collections
 
 # Import Python wrapper for or-tools CP-SAT solver.
 from ortools.sat.python import cp_model
+# https://developers.google.com/optimization/scheduling/job_shop na podstawie tego zostało zrobione
 
 def load_Data(file_name):
 
@@ -100,6 +101,7 @@ def solve_job_shop(filename):
         # Finally print the solution found.
         print('Optimal C_Max: %i' % solver.ObjectiveValue())
         print(output)
+        return solver.ObjectiveValue()
 
 
 solve_job_shop("job_shop.txt")
